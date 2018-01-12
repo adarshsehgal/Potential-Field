@@ -35,21 +35,20 @@ void callback(const nav_msgs::Odometry::ConstPtr& msg)
 
 int main(int argc, char **argv){
 
-	const double PI = 3.14159265358979323846;
+	//const double PI = 3.14159265358979323846;
     
     	ROS_INFO("start");
 
 	ros::init(argc, argv, "potential_field_node");
 	ros::NodeHandle n;
-    	ros::Subscriber sub_odometry = n.subscribe("/summit_xl_control/odom", 1, callback);
-    	ros::Publisher movement_pub = n.advertise<geometry_msgs::Twist>("/summit_xl_control/cmd_vel",1); //for sensors the value after , should be higher to get a more accurate result (queued)
+    	ros::Subscriber sub_odometry = n.subscribe("/summit_xl_control/odom", 1, callback); //summit_xl_control/odom
+    	ros::Publisher movement_pub = n.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel",1); // turtle1/cmd_vel - summit_xl_control/cmd_vel
     	pub_pose2d = n.advertise<geometry_msgs::Pose2D>("turtlebot_pose2d", 1);
     	ros::Rate rate(10);
 
 
 	while (ros::ok()){
-		ros::spinOnce();
-		
+				
 		int n=2;
 		float delta_t=0.5;
 
@@ -58,6 +57,7 @@ int main(int argc, char **argv){
 		
 		float lambda=8.5;
 		float pr_max=50;		
+
 
 		//SET VIRTUAL TARGET
 		double qv[length_t][n];
@@ -70,7 +70,7 @@ int main(int argc, char **argv){
 		qv[0][0]=current_pose.x;//x of actual robot and virtual target	
 		qv[0][1]=current_pose.y;// y of actual robot and virtual target
 	
-		float pv=1.2;
+		float pv=0.7;
 
 		double theta_t[length_t][1];
 
@@ -144,7 +144,7 @@ int main(int argc, char **argv){
 			qv[i][0]=qv_x;
 			qv[i][1]=qv_y;
 
-			std::cout<<qv[2][0];
+			//std::cout<<qv[2][0];
 			
 			
 			for(int j=0;j<n;j++){
@@ -160,7 +160,7 @@ int main(int argc, char **argv){
 			norm_qrv=sqrt(pow(qrv[i-1][0],2)+pow(qrv[i-1][1],2));
 			//std::cout<<sqrt(pow(qrv[1][0],2)+pow(qrv[1][1],2));
 
-			pr[i][0]=sqrt(pow(pv,2) + 2*lambda*norm_qrv*pv*cos(theta_t[i][0]-phi[i] + pow(lambda,2)*pow(norm_qrv,2)));	
+			//pr[i][0]=sqrt(pow(pv,2) + 2*lambda*norm_qrv*pv*cos(theta_t[i][0]-phi[i] + pow(lambda,2)*pow(norm_qrv,2)));	
 			//std::cout<<pr[2][0];
 					
 			theta_r[i][0]=phi[i] + asin(pv*sin(theta_t[i][0] - phi[i])/pr[i][0]);
@@ -170,6 +170,8 @@ int main(int argc, char **argv){
 			//update position and velocity of robot
 			qr[i][0]=qr[i-1][0] + pr[i][0]*delta_t*cos(theta_r[i-1][0]);
 			qr[i][1]=qr[i-1][1] + pr[i][0]*delta_t*sin(theta_r[i-1][0]);
+
+			//std::cout<<qr[i][1];
 
 			qrv[i][0]=qv[i][0] - qr[i][0];
 			qrv[i][1]=qv[i][1] - qr[i][1];
@@ -182,9 +184,9 @@ int main(int argc, char **argv){
 	   		//msg.linear.x=0.2;
 	   		//msg.angular.z=-0.3;
 
-			//msg.linear.x=qr[i][0];
-			//msg.linear.y=qr[i][1];
-	   		//msg.angular.z=-0.3;
+			msg.linear.x=qr[i][0];
+			msg.linear.y=qr[i][1];
+	   		msg.angular.z=qr[i][1];
 	   		movement_pub.publish(msg);
 			
 			for(int j=0; j<n;j++){
@@ -196,7 +198,8 @@ int main(int argc, char **argv){
 
 						
 		}
-		
+		ros::spinOnce(); 
+		rate.sleep();
 	   	
 	}
 	
