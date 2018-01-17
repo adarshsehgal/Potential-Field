@@ -9,6 +9,9 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rospy
+  tf
+  turtlesim
 )
 
 ## System dependencies are found with CMake's conventions
@@ -132,6 +135,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/potential_field_node.cpp)
+add_executable(potential_field_node src/potential_field_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,6 +152,10 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+target_link_libraries(potential_field_node
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############
@@ -156,7 +164,7 @@ include_directories(
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
 ## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
+## in contrast to setup.py, you can choose the destinationur
 # install(PROGRAMS
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -195,3 +203,12 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(frames_tf_broadcaster src/frames_tf_broadcaster.cpp)
+target_link_libraries(frames_tf_broadcaster ${catkin_LIBRARIES})
+
+add_executable(Robot_tf_listener src/Robot_tf_listener.cpp)
+target_link_libraries(Robot_tf_listener ${catkin_LIBRARIES})
+
+add_executable(Robot_tf_broadcaster src/Robot_tf_broadcaster.cpp)
+target_link_libraries(Robot_tf_broadcaster ${catkin_LIBRARIES})

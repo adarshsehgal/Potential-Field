@@ -9,6 +9,9 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rospy
+  tf
+  turtlesim
 )
 
 ## System dependencies are found with CMake's conventions
@@ -161,7 +164,7 @@ target_link_libraries(potential_field_node
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
 ## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
+## in contrast to setup.py, you can choose the destinationur
 # install(PROGRAMS
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -200,3 +203,12 @@ target_link_libraries(potential_field_node
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(frames_tf_broadcaster src/frames_tf_broadcaster.cpp)
+target_link_libraries(frames_tf_broadcaster ${catkin_LIBRARIES})
+
+add_executable(Robot_tf_listener src/Robot_tf_listener.cpp)
+target_link_libraries(Robot_tf_listener ${catkin_LIBRARIES})
+
+add_executable(Robot_tf_broadcaster src/Robot_tf_broadcaster.cpp)
+target_link_libraries(Robot_tf_broadcaster ${catkin_LIBRARIES})

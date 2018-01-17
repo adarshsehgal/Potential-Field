@@ -1,0 +1,9 @@
+<launch>
+	<!-- Turtlesim Node -->
+	<node pkg="turtlesim" type="turtlesim_node" name="sim"/>
+	
+	<node pkg="potential_field" type="frames_tf_broadcaster"
+          name="broadcaster_frame" />
+	<node pkg="potential_field" type="Robot_tf_listener"
+          name="listener_frame" />
+</launch>
