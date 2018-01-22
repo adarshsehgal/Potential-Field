@@ -205,24 +205,24 @@ include_directories(
 #add_executable(frames_tf_broadcaster src/frames_tf_broadcaster.cpp)
 #target_link_libraries(frames_tf_broadcaster ${catkin_LIBRARIES})
 
-add_executable(Robot_tf_listener src/Robot_tf_listener.cpp)
-target_link_libraries(Robot_tf_listener ${catkin_LIBRARIES})
+#add_executable(Robot_tf_listener src/Robot_tf_listener.cpp)
+#target_link_libraries(Robot_tf_listener ${catkin_LIBRARIES})
 
-add_executable(Robot_tf_broadcaster src/Robot_tf_broadcaster.cpp)
-target_link_libraries(Robot_tf_broadcaster ${catkin_LIBRARIES})
-
-add_executable(potential_field_node src/potential_field_node.cpp)
-target_link_libraries(potential_field_node
-  ${catkin_LIBRARIES}
-)
-
-add_executable(potential_field src/potential_field.cpp)
-target_link_libraries(potential_field
-  ${catkin_LIBRARIES}
-)
+#add_executable(potential_field_node src/potential_field_node.cpp)
+#target_link_libraries(potential_field_node
+#  ${catkin_LIBRARIES}
+#)
 
 #add_executable(Origin_VirtualTarget_tf_broadcaster src/Origin_VirtualTarget_tf_broadcaster.cpp)
 #target_link_libraries(Origin_VirtualTarget_tf_broadcaster ${catkin_LIBRARIES})
 
 add_executable(VirtualTarget_tf_broadcaster src/VirtualTarget_tf_broadcaster.cpp)
 target_link_libraries(VirtualTarget_tf_broadcaster ${catkin_LIBRARIES})
+
+add_executable(Robot_tf_broadcaster src/Robot_tf_broadcaster.cpp)
+target_link_libraries(Robot_tf_broadcaster ${catkin_LIBRARIES})
+
+add_executable(potential_field src/potential_field.cpp)
+target_link_libraries(potential_field
+  ${catkin_LIBRARIES}
+)

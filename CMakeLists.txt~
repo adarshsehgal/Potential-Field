@@ -216,6 +216,11 @@ target_link_libraries(potential_field_node
   ${catkin_LIBRARIES}
 )
 
+add_executable(potential_field src/potential_field.cpp)
+target_link_libraries(potential_field
+  ${catkin_LIBRARIES}
+)
+
 #add_executable(Origin_VirtualTarget_tf_broadcaster src/Origin_VirtualTarget_tf_broadcaster.cpp)
 #target_link_libraries(Origin_VirtualTarget_tf_broadcaster ${catkin_LIBRARIES})
 
