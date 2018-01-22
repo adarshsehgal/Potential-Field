@@ -2,7 +2,7 @@
 #include <tf/transform_broadcaster.h>
 #include <turtlesim/Pose.h>
 
-std::string turtle_name;
+//std::string turtle_name;
 
 void poseCallback(const turtlesim::PoseConstPtr& msg){
 	static tf::TransformBroadcaster br;
@@ -11,15 +11,15 @@ void poseCallback(const turtlesim::PoseConstPtr& msg){
 	tf::Quaternion q;
 	q.setRPY(0, 0, msg->theta);
 	transform.setRotation(q);
-	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "VirtualTarget", "turtle1"));
+	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "Origin_Virtual_Target"));
 }
 
 int main(int argc, char** argv){
 	ros::init(argc, argv, "my_tf_broadcaster");
+	
 	ros::NodeHandle node;
 	ros:: Subscriber sub = node.subscribe("turtle1/pose", 10, &poseCallback);
 
 	ros::spin();
 	return 0;
 }
-

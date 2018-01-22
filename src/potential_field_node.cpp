@@ -5,6 +5,7 @@
 #include <tf/tf.h>
 #include <geometry_msgs/Pose2D.h>
 #include <nav_msgs/Odometry.h>
+#include <tf/transform_broadcaster.h>
 
 geometry_msgs::Pose2D current_pose;
 ros::Publisher pub_pose2d;
@@ -42,8 +43,13 @@ int main(int argc, char **argv){
 
 	ros::init(argc, argv, "potential_field_node");
 	ros::NodeHandle n;
-    	ros::Subscriber sub_odometry = n.subscribe("/summit_xl_control/odom", 1, callback); //summit_xl_control/odom
-    	ros::Publisher movement_pub = n.advertise<geometry_msgs::Twist>("/summit_xl_control/cmd_vel",1); // turtle1/cmd_vel - summit_xl_control/cmd_vel
+	
+	// for broadcasting virtual target
+	tf::TransformBroadcaster br;
+  	tf::Transform transform;
+
+    	ros::Subscriber sub_odometry = n.subscribe("/turtle1/pose", 1, callback); //summit_xl_control/odom - turtle1/pose
+    	ros::Publisher movement_pub = n.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel",1); // turtle1/cmd_vel - summit_xl_control/cmd_vel
     	pub_pose2d = n.advertise<geometry_msgs::Pose2D>("bot_pose2d", 1);
     	ros::Rate rate(10);
 
@@ -139,15 +145,22 @@ int main(int argc, char **argv){
 		}	
 		for(int i=1;i<10;i++){
 			
-			qv_x=60 - 25*cos(t[i]);
-			qv_y=30 + 25*sin(t[i]);
+			//qv_x=60 - 25*cos(t[i]);
+			//qv_y=30 + 25*sin(t[i]);
+
+			qv_x=1.0*sin(ros::Time::now().toSec());
+			qv_y=1.0*cos(ros::Time::now().toSec());
 			
 			qv[i][0]=qv_x;
 			qv[i][1]=qv_y;
 
 			//std::cout<<qv[2][0];
+			transform.setOrigin( tf::Vector3(qv_x, qv_y, 0.0) );
+    			transform.setRotation( tf::Quaternion(0, 0, 0, 1) );
+    			br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "Origin_Virtual_Target", "VirtualTarget"));
 			
-			
+						
+
 			for(int j=0;j<n;j++){
 				qt_diff[i][j]=qv[i][j] - qv[i-1][j];
 				
